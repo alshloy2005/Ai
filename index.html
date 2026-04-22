@@ -1,101 +1,287 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GPN GLOBAL - SYSTEM</title>
+    <title>GPN MEGA MARKET | السوق العالمي الموحد</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --gold: #d4af37; --bg: #0a0a0a; --card: #151515; }
-        body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; padding: 0; direction: rtl; overflow: hidden; }
-        
-        .header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; background: #111; }
-        .logo { color: var(--gold); font-weight: bold; font-size: 1.1rem; }
-        .status { font-size: 0.75rem; color: #4CAF50; display: flex; align-items: center; gap: 5px; }
+        :root {
+            --gold: #d4af37;
+            --bg: #000000;
+            --card-bg: #0a0a0a;
+            --accent: #00ffcc;
+            --danger: #ff3e3e;
+            --success: #00ff88;
+        }
 
-        .content-section { display: none; padding: 20px; height: calc(100vh - 140px); overflow-y: auto; }
-        .active { display: block; animation: fadeIn 0.3s ease; }
+        * {
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-        .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid #222; margin-bottom: 20px; text-align: center; }
-        .balance { font-size: 2.8rem; font-weight: bold; margin: 10px 0; }
-        .unit { font-size: 1rem; color: var(--gold); margin-right: 5px; }
+        body {
+            background-color: var(--bg);
+            color: white;
+            margin: 0;
+            padding-bottom: 100px;
+            overflow-x: hidden;
+        }
 
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .grid-item { background: var(--card); padding: 15px; border-radius: 15px; text-align: center; border: 1px solid #222; }
-        .grid-item i { color: var(--gold); font-size: 1.5rem; margin-bottom: 8px; }
+        /* تأثير الحماية والخلفية */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
+            z-index: -1;
+        }
 
-        .deposit-box { background: #000; padding: 15px; border-radius: 10px; border: 1px dashed var(--gold); margin: 15px 0; word-break: break-all; font-family: monospace; font-size: 0.85rem; }
-        .btn { background: var(--gold); color: black; border: none; padding: 12px; border-radius: 8px; font-weight: bold; width: 100%; cursor: pointer; }
+        header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--gold);
+            background: rgba(0,0,0,0.9);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #111; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #222; }
-        .nav-item { color: #666; text-align: center; font-size: 0.7rem; flex: 1; cursor: pointer; }
-        .nav-item.active-link { color: var(--gold); }
-        .nav-item i { display: block; font-size: 1.3rem; margin-bottom: 3px; }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--gold);
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+        }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .ai-status {
+            font-size: 0.65rem;
+            color: var(--accent);
+            margin-top: 5px;
+            letter-spacing: 1px;
+        }
+
+        .container { padding: 15px; }
+
+        /* قسم الإيداع السريع */
+        .wallet-card {
+            background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+            border: 1px solid var(--gold);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .wallet-card h3 { margin: 0; font-size: 0.9rem; color: #888; }
+        .balance { font-size: 2.2rem; font-weight: bold; margin: 10px 0; color: #fff; }
+
+        /* الأقسام */
+        .section-title {
+            font-size: 1.1rem;
+            color: var(--gold);
+            margin: 20px 0 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* شبكة المنتجات */
+        .market-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border: 1px solid #1a1a1a;
+            border-radius: 18px;
+            padding: 15px;
+            text-align: center;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card:active { transform: scale(0.95); border-color: var(--gold); }
+
+        .product-card i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .product-card h4 { margin: 5px 0; font-size: 0.85rem; color: #fff; }
+
+        .price-box { margin-top: 10px; }
+        .current-price { color: var(--success); font-weight: bold; font-size: 1.1rem; }
+        .old-price { color: var(--danger); text-decoration: line-through; font-size: 0.75rem; margin-left: 5px; }
+
+        .buy-btn {
+            background: var(--gold);
+            color: #000;
+            border: none;
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bold;
+            margin-top: 12px;
+            cursor: pointer;
+        }
+
+        /* شارات مميزة */
+        .badge {
+            position: absolute;
+            top: 0; left: 0;
+            background: var(--danger);
+            color: #fff;
+            font-size: 0.55rem;
+            padding: 3px 10px;
+            border-bottom-right-radius: 12px;
+            font-weight: bold;
+        }
+
+        /* الفوتر */
+        .nav-bar {
+            position: fixed;
+            bottom: 0; width: 100%;
+            background: rgba(0,0,0,0.95);
+            display: flex;
+            padding: 15px 0;
+            border-top: 1px solid #222;
+            z-index: 1000;
+        }
+
+        .nav-item { flex: 1; text-align: center; color: #555; font-size: 0.7rem; }
+        .nav-item.active { color: var(--gold); }
+        .nav-item i { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="logo">GPN GLOBAL</div>
-        <div class="status">● NODE ACTIVE</div>
+    <header>
+        <div class="logo">GPN MARKET</div>
+        <div class="ai-status"><i class="fas fa-shield-halved"></i> AI SECURITY PROTECTION ACTIVE</div>
+    </header>
+
+    <div class="container">
+        
+        <div class="wallet-card">
+            <h3>رصيدك الحالي (USDT)</h3>
+            <div class="balance">0.00 <span style="font-size: 1rem; color: var(--gold);">USDT</span></div>
+            <button class="buy-btn" style="background: #fff;" onclick="deposit()">شحن عبر الوسيط المحلي</button>
+        </div>
+
+        <div class="section-title"><i class="fas fa-bolt"></i> عروض فلاش USDT (أسعار حية)</div>
+        <div class="market-grid">
+            <div class="product-card">
+                <span class="badge">الأكثر مبيعاً</span>
+                <i class="fas fa-coins" style="color: #f1c40f;"></i>
+                <h4>100 USDT Flash</h4>
+                <div class="price-box">
+                    <span class="old-price">100$</span>
+                    <span class="current-price">85.00$</span>
+                </div>
+                <button class="buy-btn" onclick="sendOrder('100 USDT Flash', 85)">شراء الآن</button>
+            </div>
+            <div class="product-card">
+                <i class="fas fa-coins" style="color: #f1c40f;"></i>
+                <h4>500 USDT Flash</h4>
+                <div class="price-box">
+                    <span class="old-price">500$</span>
+                    <span class="current-price">410.00$</span>
+                </div>
+                <button class="buy-btn" onclick="sendOrder('500 USDT Flash', 410)">شراء الآن</button>
+            </div>
+        </div>
+
+        <div class="section-title"><i class="fas fa-credit-card"></i> بطاقات أرصدة عالية (High Limit)</div>
+        <div class="market-grid">
+            <div class="product-card" style="border: 1px solid var(--danger);">
+                <span class="badge" style="background: var(--success); color: black;">لقطة اليوم</span>
+                <i class="fab fa-cc-visa" style="color: var(--danger);"></i>
+                <h4>Visa (Bal: 2,500$)</h4>
+                <div class="price-box">
+                    <span class="old-price">300$</span>
+                    <span class="current-price">49.99$</span>
+                </div>
+                <button class="buy-btn" style="background: var(--danger); color: white;" onclick="sendOrder('Visa 2.5k Bal', 49.99)">اقتنص الآن</button>
+            </div>
+            <div class="product-card" style="border: 1px solid var(--danger);">
+                <i class="fab fa-cc-mastercard" style="color: var(--danger);"></i>
+                <h4>Master (Bal: 6,000$)</h4>
+                <div class="price-box">
+                    <span class="old-price">750$</span>
+                    <span class="current-price">95.00$</span>
+                </div>
+                <button class="buy-btn" style="background: var(--danger); color: white;" onclick="sendOrder('Master 6k Bal', 95)">اقتنص الآن</button>
+            </div>
+        </div>
+
+        <div class="section-title"><i class="fas fa-share-nodes"></i> خدمات السوشيال والأرقام</div>
+        <div class="market-grid">
+            <div class="product-card">
+                <i class="fab fa-whatsapp" style="color: #25d366;"></i>
+                <h4>رقم واتساب عالمي</h4>
+                <div class="price-box">
+                    <span class="current-price">1.50$</span>
+                </div>
+                <button class="buy-btn" onclick="sendOrder('WhatsApp Number', 1.5)">طلب الرقم</button>
+            </div>
+            <div class="product-card">
+                <i class="fab fa-tiktok" style="color: #fff;"></i>
+                <h4>10k متابع تيك توك</h4>
+                <div class="price-box">
+                    <span class="current-price">8.00$</span>
+                </div>
+                <button class="buy-btn" onclick="sendOrder('10k TikTok', 8)">رشق الآن</button>
+            </div>
+        </div>
+
     </div>
 
-    <div id="home" class="content-section active">
-        <div class="card">
-            <p style="color: #888; font-size: 0.8rem;">رصيد المحفظة الحالي</p>
-            <div class="balance">0.00<span class="unit">USDT</span></div>
-            <p style="font-size: 0.6rem; color: #444;">Account ID: GPN-99281</p>
-        </div>
-        <div class="grid">
-            <div class="grid-item" onclick="showSection('assets', document.getElementById('btn-assets'))"><i class="fas fa-plus-circle"></i><br>إيداع</div>
-            <div class="grid-item" onclick="alert('السحب متاح للحسابات الموثقة فقط')"><i class="fas fa-minus-circle"></i><br>سحب</div>
-        </div>
-    </div>
-
-    <div id="assets" class="content-section">
-        <h3 style="color: var(--gold);">مركز الإيداع</h3>
-        <div class="card">
-            <p style="font-size: 0.9rem;">عنوان USDT (Network: TRC20)</p>
-            <div class="deposit-box" id="addr">T8XjK6sA99sh2sM5pW77vL92</div>
-            <button class="btn" onclick="copyText()">نسخ العنوان</button>
-        </div>
-        <p style="font-size: 0.7rem; color: #888;">* يتم تأكيد الإيداع خلال 5-10 دقائق تلقائياً.</p>
-    </div>
-
-    <div id="services" class="content-section">
-        <h3 style="color: var(--gold);">خدمات الاستثمار</h3>
-        <div class="card">
-            <i class="fas fa-chart-line" style="font-size: 2rem; color: var(--gold);"></i>
-            <h4>التداول بالذكاء الاصطناعي</h4>
-            <p style="font-size: 0.8rem; color: #aaa;">عائد يومي ثابت بنسبة 2.5% على رأس المال.</p>
-            <button class="btn" style="background: #222; color: var(--gold); border: 1px solid var(--gold);">تفعيل الخطة</button>
-        </div>
-    </div>
-
-    <div class="nav-bar">
-        <div class="nav-item active-link" onclick="showSection('home', this)"><i class="fas fa-home"></i>الرئيسية</div>
-        <div id="btn-assets" class="nav-item" onclick="showSection('assets', this)"><i class="fas fa-wallet"></i>الأصول</div>
-        <div class="nav-item" onclick="showSection('services', this)"><i class="fas fa-server"></i>الخدمات</div>
-    </div>
+    <nav class="nav-bar">
+        <div class="nav-item active"><i class="fas fa-shop"></i>السوق</div>
+        <div class="nav-item" onclick="deposit()"><i class="fas fa-wallet"></i>المحفظة</div>
+        <div class="nav-item" onclick="tg.close()"><i class="fas fa-right-from-bracket"></i>خروج</div>
+    </nav>
 
     <script>
+        // إعداد تليجرام
         let tg = window.Telegram.WebApp;
-        tg.expand(); // تمديد الصفحة لملء الشاشة
+        tg.expand();
+        tg.headerColor = "#000000";
 
-        function showSection(id, el) {
-            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-link'));
-            if(el) el.classList.add('active-link');
+        // وظيفة الإيداع
+        function deposit() {
+            tg.showConfirm("سيتم تحويلك إلى وسيط الدفع المحلي لشحن محفظتك. سيتم تحويل الأموال تلقائياً لعنوان الـ USDT الخاص بك.");
         }
 
-        function copyText() {
-            const text = document.getElementById('addr').innerText;
-            navigator.clipboard.writeText(text);
-            alert("تم النسخ بنجاح!");
+        // وظيفة إرسال الطلب لكود البايثون
+        async function sendOrder(product, price) {
+            const user = tg.initDataUnsafe.user;
+            const orderData = {
+                username: user ? user.username : "Guest",
+                product: product,
+                price: price,
+                wallet: "0x83c6bd854AD4d09f05C2c82E5c7F6282f0f2f988"
+            };
+
+            // هنا تضع رابط السيرفر الخاص بك الذي يشغل كود البايثون
+            // fetch('https://your-python-server.com/api/pay', { ... });
+
+            tg.showPopup({
+                title: 'تأكيد الطلب',
+                message: `هل أنت متأكد من شراء ${product} بسعر ${price}$؟\nسيتم الخصم من الرصيد المودع.`,
+                buttons: [
+                    {id: 'ok', type: 'default', text: 'تأكيد الشراء'},
+                    {type: 'cancel', text: 'إلغاء'}
+                ]
+            });
         }
     </script>
 </body>
