@@ -1,114 +1,92 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GPN GLOBAL | Official Station</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>GPN GLOBAL - نظام المتكامل</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { 
-            --accent: #D4AF37; 
-            --bg: #050505; 
-            --card-bg: #0f0f0f;
-            --glass: rgba(255, 255, 255, 0.03); 
-            --border: rgba(255, 255, 255, 0.08); 
-        }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; overflow: hidden; }
-        
-        /* شاشة التحميل السوداء */
-        #splash { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.8s; }
-        .logo-box { width: 70px; height: 70px; border: 2px solid var(--accent); border-radius: 20px; animation: pulse 2s infinite; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--accent); font-size: 20px; }
-        @keyframes pulse { 0% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); opacity: 0.5; } }
-
-        .app-shell { height: 100vh; display: flex; flex-direction: column; opacity: 0; transition: 1s; }
-        .header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.8); }
-        .content { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 100px; }
-        
-        /* كرت الرصيد */
-        .balance-card { background: linear-gradient(145deg, #111, #050505); padding: 30px; border-radius: 30px; border: 1px solid var(--border); margin-bottom: 25px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .balance-card .label { font-size: 11px; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
-        .balance-card .val { font-size: 42px; font-weight: bold; }
-
-        /* الشبكة الأزرار */
-        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .btn-item { background: var(--card-bg); border: 1px solid var(--border); padding: 25px 15px; border-radius: 25px; text-align: center; transition: 0.3s; }
-        .btn-item:active { transform: scale(0.95); background: var(--glass); }
-        .btn-item i { color: var(--accent); font-size: 26px; margin-bottom: 12px; display: block; }
-        .btn-item span { font-size: 14px; font-weight: 500; color: #ddd; }
-
-        /* شريط التنقل السفلي */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; padding: 15px; border-top: 1px solid var(--border); background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); }
-        .nav-link { flex: 1; text-align: center; color: #555; font-size: 10px; text-decoration: none; }
-        .nav-link.active { color: var(--accent); }
-        .nav-link i { font-size: 20px; margin-bottom: 4px; }
+        :root { --gold: #d4af37; --bg: #0a0a0a; --card: #151515; --text: #ffffff; }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; padding: 0; direction: rtl; overflow: hidden; }
+        .header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; background: #111; }
+        .logo { color: var(--gold); font-weight: bold; font-size: 1.1rem; }
+        .node-status { font-size: 0.75rem; color: #4CAF50; display: flex; align-items: center; gap: 5px; }
+        .content-section { display: none; padding: 20px; height: calc(100vh - 140px); overflow-y: auto; }
+        .active { display: block; animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid #222; margin-bottom: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .balance-amount { font-size: 2.8rem; font-weight: bold; color: #fff; }
+        .balance-unit { color: var(--gold); font-size: 1rem; margin-right: 5px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .grid-item { background: var(--card); padding: 15px; border-radius: 15px; text-align: center; border: 1px solid #222; cursor: pointer; }
+        .grid-item i { color: var(--gold); font-size: 1.6rem; margin-bottom: 8px; }
+        .deposit-box { background: #000; padding: 15px; border-radius: 10px; border: 1px dashed var(--gold); margin: 15px 0; word-break: break-all; font-family: monospace; font-size: 0.9rem; }
+        .btn-copy { background: var(--gold); color: black; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; width: 100%; cursor: pointer; }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #111; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #222; }
+        .nav-item { color: #666; text-align: center; font-size: 0.7rem; cursor: pointer; flex: 1; text-decoration: none; }
+        .nav-item.active-link { color: var(--gold); }
+        .nav-item i { display: block; font-size: 1.3rem; margin-bottom: 3px; }
     </style>
 </head>
 <body>
 
-    <div id="splash">
-        <div class="logo-box">GPN</div>
-        <p style="color:var(--accent); margin-top:15px; font-size:12px; letter-spacing:3px;">CONNECTING TO NODE...</p>
+    <div class="header">
+        <div class="logo">GPN GLOBAL</div>
+        <div class="node-status"><i class="fas fa-circle"></i> NODE CONNECTED</div>
     </div>
 
-    <div class="app-shell" id="appShell">
-        <div class="header">
-            <div style="display:flex; align-items:center; gap:8px;">
-                <div style="width:8px; height:8px; background:#4caf50; border-radius:50%;"></div>
-                <span style="font-size:12px; font-weight:bold; letter-spacing:1px;">NODE CONNECTED</span>
-            </div>
-            <span style="color:var(--accent); font-weight:bold;">GPN GLOBAL</span>
+    <div id="home" class="content-section active">
+        <div class="card">
+            <p style="color:#888;">قيمة الأصول الحالية</p>
+            <div class="balance-amount">0.00<span class="balance-unit">USDT</span></div>
+            <p style="font-size: 0.7rem; color: #444;">ID: 0x83c6...f988</p>
         </div>
-
-        <div class="content">
-            <div class="balance-card">
-                <div class="label">Current Asset Value</div>
-                <div class="val">0.00 <span style="font-size:16px; opacity:0.4; font-weight:normal;">USDT</span></div>
-                <div style="font-size:9px; color:#444; margin-top:10px;">WALLET: 0x83c6...f988</div>
-            </div>
-
-            <div class="action-grid">
-                <div class="btn-item" onclick="showMsg('Store')">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span>Store</span>
-                </div>
-                <div class="btn-item" onclick="showMsg('Add Funds')">
-                    <i class="fas fa-wallet"></i>
-                    <span>Add Funds</span>
-                </div>
-                <div class="btn-item" onclick="showMsg('Rewards')">
-                    <i class="fas fa-trophy"></i>
-                    <span>Rewards</span>
-                </div>
-                <div class="btn-item" onclick="showMsg('Transfer')">
-                    <i class="fas fa-paper-plane"></i>
-                    <span>Transfer</span>
-                </div>
-            </div>
+        <div class="grid">
+            <div class="grid-item" onclick="showSection('assets', document.getElementById('nav-assets'))"><i class="fas fa-arrow-down"></i><p>إيداع</p></div>
+            <div class="grid-item" onclick="alert('سحب الأرباح متاح بعد توثيق الحساب')"><i class="fas fa-external-link-alt"></i><p>سحب</p></div>
         </div>
+    </div>
 
-        <div class="bottom-nav">
-            <div class="nav-link active"><i class="fas fa-home"></i><br>HOME</div>
-            <div class="nav-link"><i class="fas fa-layer-group"></i><br>SERVICES</div>
-            <div class="nav-link"><i class="fas fa-briefcase"></i><br>ASSETS</div>
-            <div class="nav-link"><i class="fas fa-user-crown"></i><br>VIP</div>
+    <div id="assets" class="content-section">
+        <h3 style="color: var(--gold);">إيداع أموال</h3>
+        <div class="card">
+            <p>أرسل USDT (شبكة TRC20) للعنوان:</p>
+            <div class="deposit-box" id="walletAddr">T8XjK6sA99sh2sM5pW77vL92</div>
+            <button class="btn-copy" onclick="copyAddr()">نسخ العنوان</button>
         </div>
+        <p style="font-size:0.8rem; color:#888;">بعد التحويل، تواصل مع الدعم لتأكيد الإيداع.</p>
+    </div>
+
+    <div id="services" class="content-section">
+        <h3 style="color: var(--gold);">الخدمات الرقمية</h3>
+        <div class="card">
+            <i class="fas fa-robot" style="font-size:2rem; color:var(--gold);"></i>
+            <h4>بوت التداول الآلي</h4>
+            <p style="font-size:0.8rem; color:#aaa;">ربح يومي 2.5% من رأس المال.</p>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <div class="nav-item active-link" id="nav-home" onclick="showSection('home', this)"><i class="fas fa-home"></i>الرئيسية</div>
+        <div class="nav-item" id="nav-assets" onclick="showSection('assets', this)"><i class="fas fa-wallet"></i>الأصول</div>
+        <div class="nav-item" id="nav-services" onclick="showSection('services', this)"><i class="fas fa-layer-group"></i>الخدمات</div>
+        <a href="https://t.me/mmo_al1963" class="nav-item"><i class="fas fa-headset"></i>الدعم</a>
     </div>
 
     <script>
-        // إخفاء شاشة التحميل
-        window.onload = () => {
-            setTimeout(() => {
-                document.getElementById('splash').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('splash').style.display = 'none';
-                    document.getElementById('appShell').style.opacity = '1';
-                }, 800);
-            }, 2000);
-        };
-
-        function showMsg(type) {
-            alert("🏛️ GPN System:\nبوابة " + type + " قيد التحديث الآن للمزامنة مع الشبكة الرئيسية.");
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+        function showSection(sectionId, element) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active-link'));
+            if(element) element.classList.add('active-link');
+        }
+        function copyAddr() {
+            const addr = document.getElementById('walletAddr').innerText;
+            navigator.clipboard.writeText(addr);
+            alert("تم نسخ العنوان!");
         }
     </script>
 </body>
