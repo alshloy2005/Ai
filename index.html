@@ -3,90 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GPN GLOBAL - نظام المتكامل</title>
+    <title>GPN GLOBAL - SYSTEM</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --gold: #d4af37; --bg: #0a0a0a; --card: #151515; --text: #ffffff; }
-        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; padding: 0; direction: rtl; overflow: hidden; }
+        :root { --gold: #d4af37; --bg: #0a0a0a; --card: #151515; }
+        body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; padding: 0; direction: rtl; overflow: hidden; }
+        
         .header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; background: #111; }
         .logo { color: var(--gold); font-weight: bold; font-size: 1.1rem; }
-        .node-status { font-size: 0.75rem; color: #4CAF50; display: flex; align-items: center; gap: 5px; }
+        .status { font-size: 0.75rem; color: #4CAF50; display: flex; align-items: center; gap: 5px; }
+
         .content-section { display: none; padding: 20px; height: calc(100vh - 140px); overflow-y: auto; }
-        .active { display: block; animation: fadeIn 0.4s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid #222; margin-bottom: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .balance-amount { font-size: 2.8rem; font-weight: bold; color: #fff; }
-        .balance-unit { color: var(--gold); font-size: 1rem; margin-right: 5px; }
+        .active { display: block; animation: fadeIn 0.3s ease; }
+
+        .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid #222; margin-bottom: 20px; text-align: center; }
+        .balance { font-size: 2.8rem; font-weight: bold; margin: 10px 0; }
+        .unit { font-size: 1rem; color: var(--gold); margin-right: 5px; }
+
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .grid-item { background: var(--card); padding: 15px; border-radius: 15px; text-align: center; border: 1px solid #222; cursor: pointer; }
-        .grid-item i { color: var(--gold); font-size: 1.6rem; margin-bottom: 8px; }
-        .deposit-box { background: #000; padding: 15px; border-radius: 10px; border: 1px dashed var(--gold); margin: 15px 0; word-break: break-all; font-family: monospace; font-size: 0.9rem; }
-        .btn-copy { background: var(--gold); color: black; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; width: 100%; cursor: pointer; }
+        .grid-item { background: var(--card); padding: 15px; border-radius: 15px; text-align: center; border: 1px solid #222; }
+        .grid-item i { color: var(--gold); font-size: 1.5rem; margin-bottom: 8px; }
+
+        .deposit-box { background: #000; padding: 15px; border-radius: 10px; border: 1px dashed var(--gold); margin: 15px 0; word-break: break-all; font-family: monospace; font-size: 0.85rem; }
+        .btn { background: var(--gold); color: black; border: none; padding: 12px; border-radius: 8px; font-weight: bold; width: 100%; cursor: pointer; }
+
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #111; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #222; }
-        .nav-item { color: #666; text-align: center; font-size: 0.7rem; cursor: pointer; flex: 1; text-decoration: none; }
+        .nav-item { color: #666; text-align: center; font-size: 0.7rem; flex: 1; cursor: pointer; }
         .nav-item.active-link { color: var(--gold); }
         .nav-item i { display: block; font-size: 1.3rem; margin-bottom: 3px; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div class="header">
         <div class="logo">GPN GLOBAL</div>
-        <div class="node-status"><i class="fas fa-circle"></i> NODE CONNECTED</div>
+        <div class="status">● NODE ACTIVE</div>
     </div>
 
     <div id="home" class="content-section active">
         <div class="card">
-            <p style="color:#888;">قيمة الأصول الحالية</p>
-            <div class="balance-amount">0.00<span class="balance-unit">USDT</span></div>
-            <p style="font-size: 0.7rem; color: #444;">ID: 0x83c6...f988</p>
+            <p style="color: #888; font-size: 0.8rem;">رصيد المحفظة الحالي</p>
+            <div class="balance">0.00<span class="unit">USDT</span></div>
+            <p style="font-size: 0.6rem; color: #444;">Account ID: GPN-99281</p>
         </div>
         <div class="grid">
-            <div class="grid-item" onclick="showSection('assets', document.getElementById('nav-assets'))"><i class="fas fa-arrow-down"></i><p>إيداع</p></div>
-            <div class="grid-item" onclick="alert('سحب الأرباح متاح بعد توثيق الحساب')"><i class="fas fa-external-link-alt"></i><p>سحب</p></div>
+            <div class="grid-item" onclick="showSection('assets', document.getElementById('btn-assets'))"><i class="fas fa-plus-circle"></i><br>إيداع</div>
+            <div class="grid-item" onclick="alert('السحب متاح للحسابات الموثقة فقط')"><i class="fas fa-minus-circle"></i><br>سحب</div>
         </div>
     </div>
 
     <div id="assets" class="content-section">
-        <h3 style="color: var(--gold);">إيداع أموال</h3>
+        <h3 style="color: var(--gold);">مركز الإيداع</h3>
         <div class="card">
-            <p>أرسل USDT (شبكة TRC20) للعنوان:</p>
-            <div class="deposit-box" id="walletAddr">T8XjK6sA99sh2sM5pW77vL92</div>
-            <button class="btn-copy" onclick="copyAddr()">نسخ العنوان</button>
+            <p style="font-size: 0.9rem;">عنوان USDT (Network: TRC20)</p>
+            <div class="deposit-box" id="addr">T8XjK6sA99sh2sM5pW77vL92</div>
+            <button class="btn" onclick="copyText()">نسخ العنوان</button>
         </div>
-        <p style="font-size:0.8rem; color:#888;">بعد التحويل، تواصل مع الدعم لتأكيد الإيداع.</p>
+        <p style="font-size: 0.7rem; color: #888;">* يتم تأكيد الإيداع خلال 5-10 دقائق تلقائياً.</p>
     </div>
 
     <div id="services" class="content-section">
-        <h3 style="color: var(--gold);">الخدمات الرقمية</h3>
+        <h3 style="color: var(--gold);">خدمات الاستثمار</h3>
         <div class="card">
-            <i class="fas fa-robot" style="font-size:2rem; color:var(--gold);"></i>
-            <h4>بوت التداول الآلي</h4>
-            <p style="font-size:0.8rem; color:#aaa;">ربح يومي 2.5% من رأس المال.</p>
+            <i class="fas fa-chart-line" style="font-size: 2rem; color: var(--gold);"></i>
+            <h4>التداول بالذكاء الاصطناعي</h4>
+            <p style="font-size: 0.8rem; color: #aaa;">عائد يومي ثابت بنسبة 2.5% على رأس المال.</p>
+            <button class="btn" style="background: #222; color: var(--gold); border: 1px solid var(--gold);">تفعيل الخطة</button>
         </div>
     </div>
 
     <div class="nav-bar">
-        <div class="nav-item active-link" id="nav-home" onclick="showSection('home', this)"><i class="fas fa-home"></i>الرئيسية</div>
-        <div class="nav-item" id="nav-assets" onclick="showSection('assets', this)"><i class="fas fa-wallet"></i>الأصول</div>
-        <div class="nav-item" id="nav-services" onclick="showSection('services', this)"><i class="fas fa-layer-group"></i>الخدمات</div>
-        <a href="https://t.me/mmo_al1963" class="nav-item"><i class="fas fa-headset"></i>الدعم</a>
+        <div class="nav-item active-link" onclick="showSection('home', this)"><i class="fas fa-home"></i>الرئيسية</div>
+        <div id="btn-assets" class="nav-item" onclick="showSection('assets', this)"><i class="fas fa-wallet"></i>الأصول</div>
+        <div class="nav-item" onclick="showSection('services', this)"><i class="fas fa-server"></i>الخدمات</div>
     </div>
 
     <script>
         let tg = window.Telegram.WebApp;
-        tg.expand();
-        function showSection(sectionId, element) {
+        tg.expand(); // تمديد الصفحة لملء الشاشة
+
+        function showSection(id, el) {
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active-link'));
-            if(element) element.classList.add('active-link');
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-link'));
+            if(el) el.classList.add('active-link');
         }
-        function copyAddr() {
-            const addr = document.getElementById('walletAddr').innerText;
-            navigator.clipboard.writeText(addr);
-            alert("تم نسخ العنوان!");
+
+        function copyText() {
+            const text = document.getElementById('addr').innerText;
+            navigator.clipboard.writeText(text);
+            alert("تم النسخ بنجاح!");
         }
     </script>
 </body>
