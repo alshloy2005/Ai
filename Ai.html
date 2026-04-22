@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GPN GLOBAL | Official Station</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --accent: #D4AF37; 
+            --bg: #050505; 
+            --card-bg: #0f0f0f;
+            --glass: rgba(255, 255, 255, 0.03); 
+            --border: rgba(255, 255, 255, 0.08); 
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; overflow: hidden; }
+        
+        /* شاشة التحميل السوداء */
+        #splash { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.8s; }
+        .logo-box { width: 70px; height: 70px; border: 2px solid var(--accent); border-radius: 20px; animation: pulse 2s infinite; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--accent); font-size: 20px; }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); opacity: 0.5; } }
+
+        .app-shell { height: 100vh; display: flex; flex-direction: column; opacity: 0; transition: 1s; }
+        .header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.8); }
+        .content { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 100px; }
+        
+        /* كرت الرصيد */
+        .balance-card { background: linear-gradient(145deg, #111, #050505); padding: 30px; border-radius: 30px; border: 1px solid var(--border); margin-bottom: 25px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .balance-card .label { font-size: 11px; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+        .balance-card .val { font-size: 42px; font-weight: bold; }
+
+        /* الشبكة الأزرار */
+        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .btn-item { background: var(--card-bg); border: 1px solid var(--border); padding: 25px 15px; border-radius: 25px; text-align: center; transition: 0.3s; }
+        .btn-item:active { transform: scale(0.95); background: var(--glass); }
+        .btn-item i { color: var(--accent); font-size: 26px; margin-bottom: 12px; display: block; }
+        .btn-item span { font-size: 14px; font-weight: 500; color: #ddd; }
+
+        /* شريط التنقل السفلي */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; display: flex; padding: 15px; border-top: 1px solid var(--border); background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); }
+        .nav-link { flex: 1; text-align: center; color: #555; font-size: 10px; text-decoration: none; }
+        .nav-link.active { color: var(--accent); }
+        .nav-link i { font-size: 20px; margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+
+    <div id="splash">
+        <div class="logo-box">GPN</div>
+        <p style="color:var(--accent); margin-top:15px; font-size:12px; letter-spacing:3px;">CONNECTING TO NODE...</p>
+    </div>
+
+    <div class="app-shell" id="appShell">
+        <div class="header">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <div style="width:8px; height:8px; background:#4caf50; border-radius:50%;"></div>
+                <span style="font-size:12px; font-weight:bold; letter-spacing:1px;">NODE CONNECTED</span>
+            </div>
+            <span style="color:var(--accent); font-weight:bold;">GPN GLOBAL</span>
+        </div>
+
+        <div class="content">
+            <div class="balance-card">
+                <div class="label">Current Asset Value</div>
+                <div class="val">0.00 <span style="font-size:16px; opacity:0.4; font-weight:normal;">USDT</span></div>
+                <div style="font-size:9px; color:#444; margin-top:10px;">WALLET: 0x83c6...f988</div>
+            </div>
+
+            <div class="action-grid">
+                <div class="btn-item" onclick="showMsg('Store')">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Store</span>
+                </div>
+                <div class="btn-item" onclick="showMsg('Add Funds')">
+                    <i class="fas fa-wallet"></i>
+                    <span>Add Funds</span>
+                </div>
+                <div class="btn-item" onclick="showMsg('Rewards')">
+                    <i class="fas fa-trophy"></i>
+                    <span>Rewards</span>
+                </div>
+                <div class="btn-item" onclick="showMsg('Transfer')">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>Transfer</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-link active"><i class="fas fa-home"></i><br>HOME</div>
+            <div class="nav-link"><i class="fas fa-layer-group"></i><br>SERVICES</div>
+            <div class="nav-link"><i class="fas fa-briefcase"></i><br>ASSETS</div>
+            <div class="nav-link"><i class="fas fa-user-crown"></i><br>VIP</div>
+        </div>
+    </div>
+
+    <script>
+        // إخفاء شاشة التحميل
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById('splash').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('splash').style.display = 'none';
+                    document.getElementById('appShell').style.opacity = '1';
+                }, 800);
+            }, 2000);
+        };
+
+        function showMsg(type) {
+            alert("🏛️ GPN System:\nبوابة " + type + " قيد التحديث الآن للمزامنة مع الشبكة الرئيسية.");
+        }
+    </script>
+</body>
+</html>
